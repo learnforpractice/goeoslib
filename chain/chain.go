@@ -5,8 +5,8 @@ import "encoding/json"
 type ChainInfo struct {
 	ServerVersion             string `json:"server_version"`
 	ChainID                   string `json:"chain_id"`
-	HeadBlockNum              int64  `json:"head_block_num"`
-	LastIrreversibleBlockNum  int64  `json:"last_irreversible_block_num"`
+	HeadBlockNum              uint32 `json:"head_block_num"`
+	LastIrreversibleBlockNum  uint32 `json:"last_irreversible_block_num"`
 	LastIrreversibleBlockID   string `json:"last_irreversible_block_id"`
 	HeadBlockID               string `json:"head_block_id"`
 	HeadBlockTime             string `json:"head_block_time"`

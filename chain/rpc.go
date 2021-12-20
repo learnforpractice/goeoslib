@@ -3,6 +3,7 @@ package chain
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -90,7 +91,7 @@ func (r *Rpc) GetInfo() (*ChainInfo, error) {
 
 	err = json.Unmarshal(result, &info)
 	if err != nil {
-		return nil, newError(err)
+		return nil, errors.New(string(result))
 	}
 	return &info, nil
 }

@@ -14,6 +14,14 @@ func NewChainApi(rpcUrl string) *ChainApi {
 	return chainApi
 }
 
+func (api *ChainApi) GetRpc() *Rpc {
+	return api.rpc
+}
+
+func (api *ChainApi) GetInfo() (*ChainInfo, error) {
+	return api.rpc.GetInfo()
+}
+
 func (api *ChainApi) GetAccount(name string) (JsonObject, error) {
 	ret, err := api.rpc.GetAccount(&GetAccountArgs{AccountName: name})
 	if err != nil {
@@ -137,4 +145,23 @@ func (api *ChainApi) GetActions(account string, pos int, offset int) (JsonObject
 		Offset:      offset,
 	}
 	return api.rpc.GetActions(&args)
+}
+
+func (api *ChainApi) GetBlock(number uint32) (JsonObject, error) {
+	args := make(map[string]interface{})
+	args["block_num_or_id"] = number
+	rawRet, err := api.rpc.Call("chain", "get_block", args)
+	if err != nil {
+		return nil, err
+	}
+
+	ret, err := NewJsonObjectFromBytes(rawRet)
+	if err != nil {
+		return nil, err
+	}
+
+	if _, err := ret.Get("error"); err == nil {
+		return ret, newErrorf(string(rawRet))
+	}
+	return ret, nil
 }

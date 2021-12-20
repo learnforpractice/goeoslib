@@ -5,6 +5,7 @@ import (
 	"compress/zlib"
 	"crypto/sha256"
 	"encoding/hex"
+	"errors"
 	"sort"
 
 	"github.com/learnforpractice/goeoslib/crypto/secp256k1"
@@ -81,6 +82,19 @@ func NewTransaction(expiration uint32) *Transaction {
 	t.Extention = []*TransactionExtension{}
 
 	return t
+}
+
+func GetBlockNumFromHex(refBlock string) (uint32, error) {
+	id, err := hex.DecodeString(refBlock)
+	if err != nil {
+		return 0, err
+	}
+
+	if len(id) < 12 {
+		return 0, errors.New("Invalid reference block")
+	}
+	blockNum := uint32(id[0])<<24 | uint32(id[1])<<16 | uint32(id[2])<<8 | uint32(id[3])
+	return blockNum, nil
 }
 
 func GetRefBlockNum(refBlock []byte) uint32 {

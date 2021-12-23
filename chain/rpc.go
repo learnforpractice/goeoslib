@@ -8,8 +8,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"time"
-
-	"github.com/MixinNetwork/mixin/logger"
 )
 
 type GetTableRowsArgs struct {
@@ -142,7 +140,7 @@ func (t *Rpc) PushTransaction(tx *Transaction, signatures []string, compress boo
 	if err != nil {
 		return nil, err
 	}
-	logger.Verbosef("Packed transaction: %s", string(_packedTx))
+	// logger.Verbosef("Packed transaction: %s", string(_packedTx))
 	r, err := t.Call("chain", "push_transaction", _packedTx)
 	if err != nil {
 		return nil, err

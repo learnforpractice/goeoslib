@@ -5,6 +5,7 @@ import (
 	"compress/zlib"
 	"crypto/sha256"
 	"encoding/hex"
+	"encoding/json"
 	"errors"
 	"sort"
 
@@ -244,6 +245,14 @@ func (t *Transaction) Unpack(data []byte) (int, error) {
 		t.Extention[i] = extention
 	}
 	return dec.Pos(), nil
+}
+
+func (t *Transaction) Marshal() string {
+	r, err := json.Marshal(t)
+	if err != nil {
+		panic(err)
+	}
+	return string(r)
 }
 
 func (t *Transaction) Id(chainId *Bytes32) *Bytes32 {

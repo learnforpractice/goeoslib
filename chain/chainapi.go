@@ -59,7 +59,14 @@ func (api *ChainApi) GetTableRows(
 		Reverse:       reverse,
 		ShowPayer:     showPayer,
 	}
-	return api.rpc.GetTableRows(&args)
+	ret, err := api.rpc.GetTableRows(&args)
+	if err != nil {
+		return nil, err
+	}
+	if _, err := ret.Get("error"); err == nil {
+		return ret, newErrorf(ret.ToString())
+	}
+	return ret, nil
 }
 
 func (api *ChainApi) getRequiredKeys(actions []*Action) ([]string, error) {

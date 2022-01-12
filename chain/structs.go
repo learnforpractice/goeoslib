@@ -369,6 +369,8 @@ func (b JsonObject) GetUint64(keys ...interface{}) (uint64, error) {
 
 	if _v, ok := v.(json.Number); ok {
 		return strconv.ParseUint(string(_v), 10, 64)
+	} else if _v, ok := v.(string); ok {
+		return strconv.ParseUint(string(_v), 10, 64)
 	} else {
 		return 0, newErrorf("value is not a number %T", v)
 	}

@@ -26,13 +26,13 @@ func (t *PermissionLevel) Size() int {
 }
 
 type Action struct {
-	Account       Name              `json:"account"`
-	Name          Name              `json:"name"`
-	Authorization []PermissionLevel `json:"authorization"`
-	Data          Bytes             `json:"data"`
+	Account       Name               `json:"account"`
+	Name          Name               `json:"name"`
+	Authorization []*PermissionLevel `json:"authorization"`
+	Data          Bytes              `json:"data"`
 }
 
-func NewAction(perm PermissionLevel, account Name, name Name, args ...interface{}) *Action {
+func NewAction(perm *PermissionLevel, account Name, name Name, args ...interface{}) *Action {
 	a := &Action{}
 	a.Account = account
 	a.Name = name
@@ -84,7 +84,7 @@ func (a *Action) Pack() []byte {
 	enc.PackName(a.Name)
 	enc.PackLength(len(a.Authorization))
 	for _, v := range a.Authorization {
-		enc.Pack(&v)
+		enc.Pack(v)
 	}
 	enc.Pack(([]byte)(a.Data))
 	return enc.GetBytes()
@@ -109,9 +109,10 @@ func (a *Action) Unpack(b []byte) (int, error) {
 	if err != nil {
 		return 0, err
 	}
-	a.Authorization = make([]PermissionLevel, length)
+	a.Authorization = make([]*PermissionLevel, length)
 	for i := 0; i < length; i++ {
-		dec.Unpack(&a.Authorization[i])
+		a.Authorization[i] = &PermissionLevel{}
+		dec.Unpack(a.Authorization[i])
 	}
 	dec.Unpack(&a.Data)
 	return dec.Pos(), nil
@@ -122,5 +123,5 @@ func (a *Action) Size() int {
 }
 
 func (a *Action) AddPermission(actor Name, permission Name) {
-	a.Authorization = append(a.Authorization, PermissionLevel{actor, permission})
+	a.Authorization = append(a.Authorization, &PermissionLevel{actor, permission})
 }

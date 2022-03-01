@@ -134,6 +134,16 @@ func (t *Rpc) GetTableRows(args *GetTableRowsArgs) (JsonObject, error) {
 	return NewJsonObjectFromBytes(r)
 }
 
+func (t *Rpc) GetBlockTrace(blockNum uint64) (JsonObject, error) {
+	args := make(map[string]uint64)
+	args["block_num"] = blockNum
+	r, err := t.Call("trace_api", "get_block", args)
+	if err != nil {
+		return nil, err
+	}
+	return NewJsonObjectFromBytes(r)
+}
+
 func (t *Rpc) PushTransaction(tx *Transaction, signatures []string, compress bool) (JsonObject, error) {
 	packedTx := NewPackedTransaction(tx, signatures, false)
 	_packedTx, err := json.Marshal(packedTx)

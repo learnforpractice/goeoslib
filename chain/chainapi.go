@@ -22,6 +22,10 @@ func (api *ChainApi) GetInfo() (*ChainInfo, error) {
 	return api.rpc.GetInfo()
 }
 
+func (api *ChainApi) GetBlockTrace(blockNum uint64) (JsonObject, error) {
+	return api.rpc.GetBlockTrace(blockNum)
+}
+
 func (api *ChainApi) GetAccount(name string) (JsonObject, error) {
 	ret, err := api.rpc.GetAccount(&GetAccountArgs{AccountName: name})
 	if err != nil {

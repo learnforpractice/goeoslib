@@ -13,3 +13,18 @@ func TestUnpack(t *testing.T) {
 	s, _ := json.MarshalIndent(tx, "", "  ")
 	t.Logf("%s", s)
 }
+
+func TestChainApi(t *testing.T) {
+	chain := NewChainApi("http://127.0.0.1:8888")
+	block, err := chain.GetBlockTrace(100)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	value, err := block.GetString("status")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Logf("++++++%v", value)
+}
